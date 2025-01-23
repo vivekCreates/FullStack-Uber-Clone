@@ -7,6 +7,18 @@ enum StatusEnum {
     INACTIVE = "inactive",
 
 }
+enum VehicleEnum {
+ CAR="car",
+ MOTORCYCLE="motorcycle",
+ AUTO="auto"
+}
+
+interface VehicleShape {
+color:string;
+plate:string;
+capacity:number;
+vehicleType:VehicleEnum
+}
 interface Location {
     ltd: number;
     lng: number;
@@ -17,6 +29,7 @@ interface CaptainShape extends Document {
     password: string;
     socketId: string;
     status: StatusEnum;
+    vehicle:VehicleEnum;
     location: Location;
 }
 
@@ -49,6 +62,25 @@ const captainSchema: Schema = new Schema<CaptainShape>({
         type: String,
         enum: Object.values(StatusEnum),
         default:StatusEnum.INACTIVE
+    },
+    vehicle:{
+        color:{
+            type:String,
+            required:true
+        },
+        plate:{
+            type:String,
+            required:true
+        },
+        cpacity:{
+            type:Number,
+            required:true
+        },
+        vehicleType:{
+            type:String,
+            enum:Object.values(VehicleEnum),
+            required:true
+        },
     },
     location: {
         ltd: {
