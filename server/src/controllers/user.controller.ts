@@ -132,8 +132,28 @@ const logoutUser = asyncHandler(async (req: Request, res: Response) => {
 })
 
 
+const getUserProfile = asyncHandler(async(req:Request,res:Response)=>{
+    if (!req.user) {
+        throw new ApiError(401,"No authorized User")
+    }
+
+    const user = await User.findById(req.user?.id)
+    if (!user) {
+        throw new ApiError(401,"user does not exist")
+    }
+
+    return res.json(
+        new ApiResponse(
+            200,
+            user,
+            "user profile fetched successfully"
+        )
+    )
+})
+
 export {
     registerUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getUserProfile
 }
