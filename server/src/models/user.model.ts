@@ -1,27 +1,9 @@
 import mongoose, { Schema, Model, model } from "mongoose";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-
-export interface FullnameShape {
-    firstname: string;
-    lastname: string;
-}
+import { UserShape } from "../interfaces/user.interface";
 
 
-export interface UserShape extends Document {
-    _id: string;
-    fullname: FullnameShape;
-    email: string;
-    password: string;
-    socketId: string;
-    refreshToken: string;
-    createdAt: Date;
-    updatedAt: Date;
-    isModified: (path: string) => boolean; 
-    isPasswordCorrect(password: string): Promise<boolean>;
-    generateAccessToken():string;
-    generateRefreshToken():string;
-}
 
 const userSchema: Schema = new Schema<UserShape>({
     fullname: {

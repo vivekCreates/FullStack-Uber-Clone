@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
-import { User, UserShape } from '../models/user.model';
+import { User } from '../models/user.model';
 import { ApiResponse } from '../utils/ApiResponse';
 import { generateAccessAndRefreshTokens } from '../utils/generateTokens';
 import jwt from 'jsonwebtoken';

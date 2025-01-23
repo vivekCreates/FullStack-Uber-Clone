@@ -3,7 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
 import { User } from '../models/user.model';
-import { FullnameShape } from '../models/user.model';
+import { FullnameShape } from '../interfaces/user.interface';
+
 
 interface JWTPayload {
     _id: string;

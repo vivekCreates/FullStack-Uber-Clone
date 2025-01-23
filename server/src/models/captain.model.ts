@@ -1,37 +1,9 @@
 import mongoose, { Document, Schema, Model, model } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
-import { FullnameShape } from "./user.model";
-enum StatusEnum {
-    ACTIVE = "active",
-    INACTIVE = "inactive",
+import { CaptainShape, StatusEnum, VehicleEnum } from "../interfaces/captain.interface";
 
-}
-enum VehicleEnum {
- CAR="car",
- MOTORCYCLE="motorcycle",
- AUTO="auto"
-}
 
-interface VehicleShape {
-color:string;
-plate:string;
-capacity:number;
-vehicleType:VehicleEnum
-}
-interface Location {
-    ltd: number;
-    lng: number;
-}
-interface CaptainShape extends Document {
-    fullname: FullnameShape;
-    email: string;
-    password: string;
-    socketId: string;
-    status: StatusEnum;
-    vehicle:VehicleEnum;
-    location: Location;
-}
 
 const captainSchema: Schema = new Schema<CaptainShape>({
     fullname: {
@@ -91,6 +63,10 @@ const captainSchema: Schema = new Schema<CaptainShape>({
             type: Number,
             required: true
         }
+    },
+    refreshToken:{
+        type:String,
+        default:""
     }
 }, { timestamps: true });
 
