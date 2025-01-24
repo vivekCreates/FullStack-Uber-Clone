@@ -1,3 +1,4 @@
+import { Captain } from "../models/captain.model";
 import { User } from "../models/user.model";
 
 export interface TokensMethods {
@@ -5,7 +6,7 @@ export interface TokensMethods {
     refreshToken: string;
 }
 
-const generateAccessAndRefreshTokens = async (userId: string): Promise<TokensMethods> => {
+const generateAccessAndRefreshTokensForUser = async (userId: string): Promise<TokensMethods> => {
     try {
         const user = await User.findById(userId);
         if (!user) {
@@ -22,10 +23,36 @@ const generateAccessAndRefreshTokens = async (userId: string): Promise<TokensMet
         await user.save({ validateBeforeSave: false });
 
         return { accessToken, refreshToken };
-    } catch (error:any) {
+    } catch (error: any) {
         console.error("Error generating tokens:", error.message || error);
         throw new Error("Failed to generate tokens");
     }
 };
 
-export { generateAccessAndRefreshTokens };
+const generateAccessAndRefreshTokensForCaptain = async (captainId: string): Promise<TokensMethods> => {
+    try {
+        const captain = await Captain.findById(captainId);
+        if (!captain) {
+            throw new Error("Captain not found");
+        }
+
+        const accessToken = captain.generateAccessToken();
+        const refreshToken = captain.generateRefreshToken();
+
+        if (refreshToken) {
+            captain.refreshToken = refreshToken;
+        }
+
+        await captain.save({ validateBeforeSave: false });
+
+        return { accessToken, refreshToken };
+    } catch (error: any) {
+        console.error("Error generating tokens:", error.message || error);
+        throw new Error("Failed to generate tokens");
+    }
+};
+
+export {
+    generateAccessAndRefreshTokensForUser,
+    generateAccessAndRefreshTokensForCaptain
+}

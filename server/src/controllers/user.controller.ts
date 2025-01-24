@@ -3,8 +3,8 @@ import { asyncHandler } from '../utils/asyncHandler';
 import { ApiError } from '../utils/ApiError';
 import { User } from '../models/user.model';
 import { ApiResponse } from '../utils/ApiResponse';
-import { generateAccessAndRefreshTokens } from '../utils/generateTokens';
 import jwt from 'jsonwebtoken';
+import {generateAccessAndRefreshTokensForUser } from '../utils/generateTokens';
 
 
 interface Options {
@@ -13,7 +13,7 @@ interface Options {
     sameSite: "strict" | "none" | "lax";
 }
 
-const options: Options = {
+export const options: Options = {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -91,7 +91,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
 
     }
 
-    const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user?._id)
+    const { accessToken, refreshToken } = await generateAccessAndRefreshTokensForUser(user?._id)
 
     if (!(accessToken || refreshToken)) {
         throw new ApiError(400, "token not generated")
@@ -106,7 +106,6 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
             refreshToken
         }, "user login successfully"))
 })
-
 
 const logoutUser = asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) {
@@ -133,7 +132,6 @@ const logoutUser = asyncHandler(async (req: Request, res: Response) => {
         )
 })
 
-
 const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
     if (!req.user) {
         throw new ApiError(401, "No authorized User")
@@ -153,7 +151,6 @@ const getUserProfile = asyncHandler(async (req: Request, res: Response) => {
     )
 })
 
-
 const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
 
     const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken
@@ -172,17 +169,7 @@ const refreshAccessToken = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(400, "No User found from decoded user id")
     }
 
-    const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshTokens(user._id)
-
-    if (!(accessToken || newRefreshToken)) {
-        throw new ApiError(400, "Tokens not generated")
-    }
-
-    if (newRefreshToken) {
-        user.refreshToken = newRefreshToken
-    }
-
-    user.save({ validateBeforeSave: false })
+    const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshTokensForUser(user._id)
 
     return res.json(
         new ApiResponse(

@@ -44,7 +44,7 @@ const captainSchema: Schema = new Schema<CaptainShape>({
             type:String,
             required:true
         },
-        cpacity:{
+        capacity:{
             type:Number,
             required:true
         },
@@ -57,11 +57,11 @@ const captainSchema: Schema = new Schema<CaptainShape>({
     location: {
         ltd: {
             type: Number,
-            required: true
+            default:null
         },
         lng: {
             type: Number,
-            required: true
+            default:null
         }
     },
     refreshToken:{
@@ -119,4 +119,4 @@ captainSchema.methods.generateRefreshToken = function (): string {
 }
 
 
-const Captain:Model<CaptainShape>  = model<CaptainShape>("Captain",captainSchema)
+export const Captain:Model<CaptainShape> = model<CaptainShape>("Captain",captainSchema)

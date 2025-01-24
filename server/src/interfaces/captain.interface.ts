@@ -1,5 +1,5 @@
 import mongoose,{Document} from "mongoose";
-import { FullnameShape } from "./user.interface";
+import { FullnameShape, UserShape } from "./user.interface";
 
 export enum StatusEnum {
     ACTIVE = "active",
@@ -23,12 +23,19 @@ export interface Location {
     lng: number;
 }
 export interface CaptainShape extends Document {
+    _id:string;
     fullname: FullnameShape;
     email: string;
     password: string;
     socketId: string;
     status: StatusEnum;
+    capacity:number;
     vehicle:VehicleEnum;
     location: Location;
-    refreshToken:String
-;}
+    refreshToken:string;
+    isModified: (path: string) => boolean; 
+    isPasswordCorrect:(password:string)=>Promise<Boolean>;
+    generateAccessToken:()=>string;
+    generateRefreshToken:()=>string;
+
+}
