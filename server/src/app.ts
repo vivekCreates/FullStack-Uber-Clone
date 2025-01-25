@@ -15,9 +15,10 @@ app.use(cookieParser())
 //import routes
 import userRoutes from "./routes/user.route"
 import captainRoutes from "./routes/captain.route"
-
+import mapRoutes from "./routes/map.route"
 // routes declaration
 app.use("/api/v1/user",userRoutes)
 app.use("/api/v1/captain",captainRoutes)
+app.use("/api/v1/map",mapRoutes)
 
 export {app}
